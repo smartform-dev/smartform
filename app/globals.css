@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 158 64% 25%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 158 64% 25%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 210 40% 98%;
+    --card: 0 0% 3%;
+    --card-foreground: 210 40% 98%;
+    --popover: 0 0% 3%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 158 64% 25%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 158 64% 25%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom styles for flowing sections */
+.flowing-section {
+  @apply relative overflow-hidden;
+}
+
+.flowing-section::before {
+  content: "";
+  @apply absolute inset-0 bg-gradient-to-b from-transparent to-background/50 pointer-events-none z-10;
+}
+
+.flowing-section + .flowing-section::before {
+  @apply from-background/50 to-transparent;
+}
+
+.supabase-gradient {
+  @apply bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800;
+}
+
+.supabase-text-gradient {
+  @apply bg-gradient-to-r from-primary-300 via-primary-400 to-primary-500 bg-clip-text text-transparent;
+}
+
+.supabase-card {
+  @apply bg-black/40 backdrop-blur-sm border-primary-800/30 hover:border-primary-700/50 transition-all;
+}
+
+.supabase-button {
+  @apply bg-primary-600 hover:bg-primary-500 text-white border-primary-500;
+}
+
+.supabase-button-outline {
+  @apply border-primary-600 text-primary-400 hover:bg-primary-900/30;
+}
+
+.supabase-accent {
+  @apply text-primary-400;
+}
+
+.supabase-muted {
+  @apply text-primary-300/70;
+}
+
+@keyframes text-shine {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.animate-text-shine {
+  background-image: linear-gradient(
+    to right,
+    hsl(var(--primary-foreground)) 0%,
+    #2e7d32 25%,
+    #81c784 50%,
+    #2e7d32 75%,
+    hsl(var(--primary-foreground)) 100%
+  );
+  background-size: 200% auto;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: text-shine 8s linear infinite;
+}

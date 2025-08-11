@@ -1,0 +1,152 @@
+// Prisma schema for Smart Contact Forms Webapp
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id                 String        @id @default(uuid())
+  userId             String        @unique // Each user has one company
+  user               Users         @relation(fields: [userId], references: [id])
+  name               String?
+  dataUsage          Float         @default(0) // Stored in MB
+  maxDataAllowance   Float         @default(10) // Stored in MB
+  files              CompanyFile[]
+  forms              Form[]
+  businessType       String?
+  websiteUrl         String?
+  productDescription String?
+  targetAudience     String?
+  mainContactGoal    String?
+  commonQuestions    String? // JSON string or text
+  valueOffers        String? // JSON string or text
+  preferredTone      String?
+  keywords           String? // JSON string or text
+  followUpStyle      String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
+
+model CompanyFile {
+  id        String   @id @default(uuid())
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  name      String
+  url       String
+  size      Float // Stored in MB
+  status    String   @default("NOT_INDEXED") // "INDEXED" or "NOT_INDEXED"
+  deleted   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Users {
+  id                String   @id @default(nanoid(7))
+  external_id       String   @unique
+  first_name        String?
+  last_name         String?
+  email             String   @unique
+  image_url         String?
+  profile_image_url String?
+  ip_address        String?
+  requestedLanguage String   @default("english")
+  last_login        DateTime @default(now())
+  created_on        DateTime @default(now())
+  Company           Company?
+  Form              Form[]
+
+  @@index([id])
+  @@map("users")
+}
+
+model Form {
+  id          String           @id @default(uuid())
+  ownerId     String
+  owner       Users            @relation(fields: [ownerId], references: [id])
+  companyId   String?
+  company     Company?         @relation(fields: [companyId], references: [id])
+  title       String
+  description String?
+  fields      FormField[]
+  embeds      FormEmbed[]
+  submissions FormSubmission[]
+  analytics   FormAnalytics[]
+  isActive    Boolean          @default(true)
+  styling     Json? // Added for colors, alignment, etc.
+  prompt      FormPrompt? // <-- Added for relation
+  chats       FormChat[] // <-- Added for relation
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model FormField {
+  id        String   @id @default(uuid())
+  formId    String
+  form      Form     @relation(fields: [formId], references: [id])
+  label     String
+  type      String // e.g. text, email, select, etc.
+  required  Boolean  @default(false)
+  options   String? // JSON string for select/radio options
+  order     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FormEmbed {
+  id        String   @id @default(uuid())
+  formId    String
+  form      Form     @relation(fields: [formId], references: [id])
+  embedCode String   @unique
+  url       String   @unique
+  createdAt DateTime @default(now())
+}
+
+model FormSubmission {
+  id            String   @id @default(uuid())
+  formId        String
+  form          Form     @relation(fields: [formId], references: [id])
+  data          Json
+  submittedAt   DateTime @default(now())
+  ip            String?
+  userAgent     String?
+  userResponded Boolean  @default(false) // Added for AI feedback
+  userResponse  String? // Added for AI feedback
+}
+
+model FormAnalytics {
+  id          String   @id @default(uuid())
+  formId      String
+  form        Form     @relation(fields: [formId], references: [id])
+  date        DateTime
+  views       Int      @default(0)
+  submissions Int      @default(0)
+  conversions Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@unique([formId, date])
+}
+
+model FormPrompt {
+  id        String   @id @default(uuid())
+  formId    String   @unique
+  form      Form     @relation(fields: [formId], references: [id])
+  prompt    String?
+  context   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FormChat {
+  id        String   @id @default(uuid())
+  formId    String
+  form      Form     @relation(fields: [formId], references: [id])
+  sessionId String // to group chats per user/session
+  sender    String // 'user' or 'ai'
+  message   String
+  createdAt DateTime @default(now())
+}

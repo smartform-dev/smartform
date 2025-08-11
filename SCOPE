@@ -1,0 +1,7 @@
+Build me an app that can be used to create smart AI powered contact forms on websites.
+
+Basically, the interface needs to be able to support a drag and drop form builder. The form should produce a unique URL/code snippet, that can be embedded on any website. Allow basic formatting/styling options remotely for the form to be updated on the fly. The way this form is different is that responses from the submittions will feed in responses from an OpenAI GPT model in real time eg. if a user fils their name. email, message etc. the AI will read it (before submitting it) and respond with a relevant useful info about the product (eg, would you like me to share XYZ with you about the product? - the user should be able to respond with a yes/no only - similar to a chatbot interface but more restricted given we only want yes/no responses).
+
+Use a modern design scheme with light and dark modes, and the british army dark green colour as primary.
+
+Tech stack: Nextjs with API on /api, app router; Tailwind; Typescript; Shadcn for design, Postgres, prisma; Clerk for auth, postmark + sendgrid for emails. I'll have the creds ready for .env file, but prepare the working webapp first.
