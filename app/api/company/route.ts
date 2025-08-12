@@ -76,18 +76,29 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const { userId } = getAuth(request)
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  const { userId: externalUserId } = getAuth(request);
+  if (!externalUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const body = await request.json()
-    const company = await prisma.company.update({
-      where: { userId },
-      data: body,
-    })
+    const body = await request.json();
 
-    return NextResponse.json(company, { status: 200 })
+    // Find the user in the local DB by external_id
+    const user = await prisma.users.findUnique({
+      where: { external_id: externalUserId },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Update the company by userId = user.id (local DB user id)
+    const company = await prisma.company.update({
+      where: { userId: user.id },
+      data: body,
+    });
+
+    return NextResponse.json(company, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

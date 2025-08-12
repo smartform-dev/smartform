@@ -15,8 +15,18 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Database connection error" }, { status: 500 });
     }
 
+    // First, find the local user by external_id (Clerk userId)
+    const localUser = await prisma.users.findUnique({
+      where: { external_id: userId },
+    });
+
+    if (!localUser) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Then, find the company by userId = local user id
     let company = await prisma.company.findUnique({
-      where: { userId },
+      where: { userId: localUser.id },
     });
 
     // If no company, return error
