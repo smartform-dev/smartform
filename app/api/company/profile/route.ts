@@ -27,10 +27,8 @@ export async function GET(req: NextRequest) {
     // Return profile data
     const profileData = {
       name: company?.name || "",
-      primaryProducts: company?.primaryProducts || [],
-      idealCustomer: company?.idealCustomer || "",
-      country: company?.country || "",
-      countryFlag: company?.countryFlag || "",
+      productDescription: company?.productDescription || "",
+      targetAudience: company?.targetAudience || "",
     };
 
     return NextResponse.json(profileData, { status: 200 });

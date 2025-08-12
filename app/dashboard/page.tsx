@@ -266,51 +266,8 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {dbStatus === "disconnected" && (
-          <Card className="mt-8 border-gray-200">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Database className="h-5 w-5" />
-                Connect Your Database
-              </CardTitle>
-              <CardDescription>
-                To store real data and enable full functionality, connect a database using these steps:
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <h4 className="font-medium">1. Add Neon Integration</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Click the "Add Integration" button and select Neon to create a PostgreSQL database.
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="font-medium">2. Set Environment Variables</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Add your DATABASE_URL and other required environment variables.
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="font-medium">3. Run Database Scripts</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Execute the schema and seed scripts to set up your database tables.
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="font-medium">4. Restart Application</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Restart your development server to connect to the new database.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        
       </div>
     </div>
   )
 }
-

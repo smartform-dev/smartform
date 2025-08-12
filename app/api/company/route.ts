@@ -3,21 +3,31 @@ import { prisma } from "@/lib/db"
 import { getAuth } from "@clerk/nextjs/server"
 
 export async function GET(request: NextRequest) {
-  const { userId } = getAuth(request)
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  const { userId: externalUserId } = getAuth(request);
+  if (!externalUserId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const company = await prisma.company.findUnique({
-      where: { userId },
-    })
+    // Find the user in the local DB by external_id
+    const user = await prisma.users.findUnique({
+      where: { external_id: externalUserId },
+    });
 
-    if (!company) {
-      return NextResponse.json({ error: "Company not found" }, { status: 404 })
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    return NextResponse.json(company, { status: 200 })
+    // Find the company by userId = user.id (local DB user id)
+    const company = await prisma.company.findUnique({
+      where: { userId: user.id },
+    });
+
+    if (!company) {
+      return NextResponse.json({ error: "Company not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(company, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 

@@ -73,8 +73,8 @@ export async function POST(req: NextRequest) {
   }
 
   const bucketName = process.env.SUPABASE_BUCKET_NAME;
-  if (!bucketName) {
-    console.error("SUPABASE_BUCKET_NAME is not set.");
+  if (!bucketName || !supabase) {
+    console.error("SUPABASE_BUCKET_NAME or Supabase client is not set.");
     return NextResponse.json(
       { error: "Storage configuration error" },
       { status: 500 }
@@ -169,8 +169,8 @@ export async function DELETE(req: NextRequest) {
   }
 
   const bucketName = process.env.SUPABASE_BUCKET_NAME;
-   if (!bucketName) {
-    console.error("SUPABASE_BUCKET_NAME is not set.");
+   if (!bucketName || !supabase) {
+    console.error("SUPABASE_BUCKET_NAME or Supabase client is not set.");
     return NextResponse.json(
       { error: "Storage configuration error" },
       { status: 500 }

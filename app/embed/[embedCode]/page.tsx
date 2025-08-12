@@ -60,7 +60,7 @@ export default async function EmbedPage({ params }: { params: Promise<{ embedCod
     aiPrompt: "",
     aiEnabled: false,
     isPublished: form.isActive ?? true,
-    embedCode: form.embeds?.[0]?.embedCode || params.embedCode,
+    embedCode: form.embeds?.[0]?.embedCode || embedCode,
     createdAt: form.createdAt?.toISOString?.() || "",
     updatedAt: form.updatedAt?.toISOString?.() || "",
   }

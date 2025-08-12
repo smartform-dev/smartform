@@ -188,7 +188,7 @@ export function FormBuilder() {
       </div>
 
       <div className="space-y-6">
-        <StyleEditor styling={styling} onUpdate={setStyling} />
+        <StyleEditor styling={styling} onUpdate={(updates) => setStyling((prevStyling) => ({ ...prevStyling, ...updates }))} />
 
         <div className="flex flex-col gap-2">
           <Button onClick={() => setIsPreview(true)} variant="outline" className="w-full">

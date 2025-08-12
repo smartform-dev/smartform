@@ -2,6 +2,16 @@ import { notFound } from "next/navigation"
 import { EmbeddedForm } from "@/components/embedded-form"
 import { prisma } from "@/lib/db"
 
+interface FormStyling {
+  primaryColor: string;
+  backgroundColor: string;
+  textColor: string;
+  borderRadius: string;
+  fontSize: string;
+  fontFamily: string;
+  darkMode: boolean;
+}
+
 async function getForm(id: string) {
   try {
     // Try to get form by ID first
@@ -46,7 +56,7 @@ export default async function FormPage({ params }: { params: Promise<{ id: strin
       required: f.required,
       options: f.options ? (Array.isArray(f.options) ? f.options : (typeof f.options === "string" ? JSON.parse(f.options) : undefined)) : undefined,
     })),
-    styling: form.styling || {
+    styling: (form.styling as unknown as FormStyling) || {
       primaryColor: "#2D5016",
       backgroundColor: "#ffffff",
       textColor: "#000000",

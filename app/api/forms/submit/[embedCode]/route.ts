@@ -27,6 +27,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       },
       include: {
         embeds: true,
+        prompt: true,
       },
     })
 
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     let aiResponse = null
 
     // Generate AI response if enabled and API key is available
-    if (form.ai_enabled && form.ai_prompt && process.env.OPENAI_API_KEY) {
+    if (form.prompt && form.prompt.prompt && process.env.OPENAI_API_KEY) {
       try {
         const submissionText = Object.entries(submissionData)
           .map(([key, value]) => `${key}: ${value}`)
@@ -55,8 +56,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
         const { text } = await generateText({
           model: openai("gpt-3.5-turbo"),
-          prompt: `${form.ai_prompt}\n\nForm submission:\n${submissionText}\n\nProvide a helpful, personalized response:`,
-          maxTokens: 200,
+          prompt: `${form.prompt.prompt}\n\nForm submission:\n${submissionText}\n\nProvide a helpful, personalized response:`,
+          maxOutputTokens: 200,
         })
 
         aiResponse = text

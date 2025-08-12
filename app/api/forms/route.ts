@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { prisma } from "@/lib/db"
 import { getAuth } from '@clerk/nextjs/server'
 
 // GET /api/forms - List all forms with submission counts
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { userId } = getAuth(request)
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
@@ -37,7 +37,7 @@ export async function GET(request: Request) {
 }
 
 // POST /api/forms - Create a new form
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { userId } = getAuth(request)
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
@@ -49,9 +49,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Title is required" }, { status: 400 })
     }
 
+    // Find the local user by external_id (Clerk userId)
+    const dbUser = await prisma.users.findUnique({
+      where: { external_id: userId }
+    });
+
+    if (!dbUser) {
+      return NextResponse.json({ error: "User not found in database" }, { status: 404 });
+    }
+
     const newForm = await prisma.form.create({
       data: {
-        ownerId: userId,
+        ownerId: dbUser.id,
         title,
         description,
         isActive: true,
