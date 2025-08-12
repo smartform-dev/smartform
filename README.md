@@ -168,3 +168,4 @@ The recommended platform for deploying this application is **Vercel**.
 3.  Vercel will automatically detect that it's a Next.js project.
 4.  Add your environment variables from your `.env` file to the Vercel project settings.
 5.  Deploy!
+
